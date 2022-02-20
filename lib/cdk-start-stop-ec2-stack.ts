@@ -10,6 +10,13 @@ export class CdkStartStopEc2Stack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
+    const targetinstance = 'i-06de357b543c8683b';
+
+    const stopHour = '17'
+    const stopMinute = '30'
+    const startHour = '23'
+    const startMinute = '30'
+
     const policydocument = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -41,8 +48,11 @@ export class CdkStartStopEc2Stack extends Stack {
       description: 'to stop the ec2 instance',
       handler: 'stopFunction.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda-handler')),
-      role    ,
-      timeout: Duration.seconds(30)
+      role,
+      timeout: Duration.seconds(30),
+      environment: {
+        "TARGET_EC2": targetinstance
+      }
     });
 
     const startfunction = new lambda.Function(this, 'startfunction', {
@@ -50,18 +60,20 @@ export class CdkStartStopEc2Stack extends Stack {
       description: 'to start the ec2 instance',
       handler: 'startFunction.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda-handler')),
-      role    ,
-      timeout: Duration.seconds(30)
+      role,
+      timeout: Duration.seconds(30),
+      environment: {
+        "TARGET_EC2": targetinstance
+      }
     });
-    
 
     const scheduledStopEvent = new event.Rule(this, 'scheduledStopEvent',{
-      schedule: event.Schedule.cron({minute: '00', hour: '18'})
+      schedule: event.Schedule.cron({ minute: stopMinute, hour: stopHour })
     });
     scheduledStopEvent.addTarget(new eventtarget.LambdaFunction(stopfunction));
 
     const scheduledStartEvent = new event.Rule(this, 'scheduledStartEvent',{
-      schedule: event.Schedule.cron({minute: '30', hour: '23'})
+      schedule: event.Schedule.cron({ minute: startMinute, hour: startHour })
     });
     scheduledStartEvent.addTarget(new eventtarget.LambdaFunction(startfunction));
 
