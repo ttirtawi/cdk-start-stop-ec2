@@ -56,12 +56,12 @@ export class CdkStartStopEc2Stack extends Stack {
     
 
     const scheduledStopEvent = new event.Rule(this, 'scheduledStopEvent',{
-      schedule: event.Schedule.cron({minute: '15', hour: '09'})
+      schedule: event.Schedule.cron({minute: '00', hour: '18'})
     });
     scheduledStopEvent.addTarget(new eventtarget.LambdaFunction(stopfunction));
 
     const scheduledStartEvent = new event.Rule(this, 'scheduledStartEvent',{
-      schedule: event.Schedule.cron({minute: '20', hour: '09'})
+      schedule: event.Schedule.cron({minute: '30', hour: '23'})
     });
     scheduledStartEvent.addTarget(new eventtarget.LambdaFunction(startfunction));
 
