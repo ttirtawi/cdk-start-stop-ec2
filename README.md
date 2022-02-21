@@ -15,3 +15,10 @@ cdk deploy --context targetinstance='i-0054db4f5bdd49490, i-06ecfc6fc8aafdf69' \
     --context scheduleStop="04:10" \
     --context scheduleStart="04:20" 
 ```
+
+Notes:
+
+1. This stack is built using CDK version 2. 
+2. Visit [the documentation](https://docs.aws.amazon.com/cdk/v2/guide/work-with.html) to setup the CDK.
+3. You need to run `cdk bootstrap aws://<account_id>/<region>` prior deploying the stack.
+
