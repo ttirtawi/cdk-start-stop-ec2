@@ -4,7 +4,7 @@ This stack will deploy CloudWatch Event cronjob to stop & start EC2 instance(s) 
 
 There are 3 input that must be set as CDK Context:
 
-1. `targetinstance` : EC2 Instance list
+1. `targetinstance` : EC2 Instance list (comma separated)
 2. `scheduleStop` : Stop time (in format `HH:mm` GMT+0)
 3. `scheduleStart` : Start time (in format `HH:mm` GMT+0)
 
