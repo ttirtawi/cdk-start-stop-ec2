@@ -10,12 +10,18 @@ export class CdkStartStopEc2Stack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const targetinstance = 'i-06de357b543c8683b';
-
-    const stopHour = '17'
-    const stopMinute = '30'
-    const startHour = '23'
-    const startMinute = '30'
+    const targetinstance = this.node.tryGetContext('targetinstance');
+    const scheduleStop = this.node.tryGetContext('scheduleStop');
+    const scheduleStart = this.node.tryGetContext('scheduleStart');
+    
+    const stopHour = scheduleStop.replace(/\s/g,'').split(":")[0];
+    const stopMinute = scheduleStop.replace(/\s/g,'').split(":")[1];
+    const startHour =  scheduleStart.replace(/\s/g,'').split(":")[0];
+    const startMinute =  scheduleStart.replace(/\s/g,'').split(":")[1];
+    // const stopHour = '17'
+    // const stopMinute = '30'
+    // const startHour = '23'
+    // const startMinute = '30'
 
     const policydocument = new iam.PolicyDocument({
       statements: [
@@ -79,6 +85,7 @@ export class CdkStartStopEc2Stack extends Stack {
 
 
     new CfnOutput(this, 'functionArn', {value: stopfunction.functionArn});
+    new CfnOutput(this, 'target_EC2', {value: targetinstance})
 
   }
 }
